@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player</title>
+    <style>
+        .audio-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .audio-player {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .custom-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button, input[type="range"], span {
+            padding: 5px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .seek-bar {
+            width: 150px;
+        }
+        .volume-control {
+            width: 100px; /* Tăng chiều dài thanh âm lượng */
+        }
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="audio-container">
+        <h2>Audio Player</h2>
+        
+        <!-- Audio Player 1 -->
+        <div class="audio-player">
+            <h3>Background music (loop)</h3>
+            <audio id="audio1" loop>
+                <source src="{{ url_for('static', filename='music/song1.mp3') }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="custom-controls">
+                <button id="playPauseBtn1">Play</button>
+                <input type="range" id="seekBar1" class="seek-bar" value="0" step="0.1" min="0" max="100">
+                <span id="currentTime1">00:00</span> / <span id="duration1">00:00</span>
+                <input type="range" id="volumeControl1" class="volume-control" value="1" step="0.1" min="0" max="1">
+                <button id="loopBtn1">Loop Off</button> <!-- Nút Loop -->
+            </div>
+            <div id="error1" class="error-message"></div>
+        </div>
+
+        <!-- Audio Player 2 -->
+        <div class="audio-player">
+            <h3>Song 2</h3>
+            <audio id="audio2">
+                <source src="{{ url_for('static', filename='music/song2.mp3') }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="custom-controls">
+                <button id="playPauseBtn2">Play</button>
+                <input type="range" id="seekBar2" class="seek-bar" value="0" step="0.1" min="0" max="100">
+                <span id="currentTime2">00:00</span> / <span id="duration2">00:00</span>
+                <input type="range" id="volumeControl2" class="volume-control" value="1" step="0.1" min="0" max="1">
+            </div>
+            <div id="error2" class="error-message"></div>
+        </div>
+
+        <!-- Audio Player 3 -->
+        <div class="audio-player">
+            <h3>Song 3</h3>
+            <audio id="audio3">
+                <source src="{{ url_for('static', filename='music/song3.mp3') }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="custom-controls">
+                <button id="playPauseBtn3">Play</button>
+                <input type="range" id="seekBar3" class="seek-bar" value="0" step="0.1" min="0" max="100">
+                <span id="currentTime3">00:00</span> / <span id="duration3">00:00</span>
+                <input type="range" id="volumeControl3" class="volume-control" value="1" step="0.1" min="0" max="1">
+            </div>
+            <div id="error3" class="error-message"></div>
+        </div>
+    </div>
+
+    <script>
+        function setupCustomAudioControls(audioId, playPauseBtnId, seekBarId, currentTimeId, durationId, volumeControlId, loopBtnId, errorId) {
+            const audio = document.getElementById(audioId);
+            const playPauseBtn = document.getElementById(playPauseBtnId);
+            const seekBar = document.getElementById(seekBarId);
+            const currentTimeDisplay = document.getElementById(currentTimeId);
+            const durationDisplay = document.getElementById(durationId);
+            const volumeControl = document.getElementById(volumeControlId);
+            const loopBtn = document.getElementById(loopBtnId);
+            const errorDiv = document.getElementById(errorId);
+
+            // Play/pause toggle
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    playPauseBtn.textContent = 'Pause';
+                } else {
+                    audio.pause();
+                    playPauseBtn.textContent = 'Play';
+                }
+            });
+
+            // Toggle loop
+            loopBtn.addEventListener('click', () => {
+                audio.loop = !audio.loop;
+                loopBtn.textContent = audio.loop ? 'Loop On' : 'Loop Off';
+            });
+
+            // Update seek bar and time display
+            audio.addEventListener('timeupdate', () => {
+                seekBar.value = (audio.currentTime / audio.duration) * 100;
+                currentTimeDisplay.textContent = formatTime(audio.currentTime);
+                durationDisplay.textContent = formatTime(audio.duration);
+            });
+
+            // Seek audio
+            seekBar.addEventListener('input', () => {
+                audio.currentTime = (seekBar.value / 100) * audio.duration;
+            });
+
+            // Volume control
+            volumeControl.addEventListener('input', () => {
+                audio.volume = volumeControl.value;
+            });
+
+            // Handle audio errors
+            audio.addEventListener('error', function(e) {
+                let errorMessage = '';
+                switch (e.target.error.code) {
+                    case e.target.error.MEDIA_ERR_ABORTED:
+                        errorMessage = 'You aborted the audio playback.';
+                        break;
+                    case e.target.error.MEDIA_ERR_NETWORK:
+                        errorMessage = 'A network error caused the audio download to fail.';
+                        break;
+                    case e.target.error.MEDIA_ERR_DECODE:
+                        errorMessage = 'The audio playback was aborted due to a corruption problem.';
+                        break;
+                    case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        errorMessage = 'The audio format is not supported by your browser.';
+                        break;
+                    default:
+                        errorMessage = 'An unknown error occurred.';
+                        break;
+                }
+                errorDiv.textContent = errorMessage;
+                errorDiv.style.display = 'block';
+                console.error('Error loading audio:', errorMessage);
+            });
+
+            // Clear error message when audio loads successfully
+            audio.addEventListener('loadeddata', function() {
+                errorDiv.style.display = 'none';
+            });
+
+            // Format time function
+            function formatTime(time) {
+                const minutes = Math.floor(time / 60);
+                const seconds = Math.floor(time % 60);
+                return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+        }
+
+        // Initialize custom controls for each audio player
+        setupCustomAudioControls('audio1', 'playPauseBtn1', 'seekBar1', 'currentTime1', 'duration1', 'volumeControl1', 'loopBtn1', 'error1');
+        setupCustomAudioControls('audio2', 'playPauseBtn2', 'seekBar2', 'currentTime2', 'duration2', 'volumeControl2', 'loopBtn2', 'error2');
+        setupCustomAudioControls('audio3', 'playPauseBtn3', 'seekBar3', 'currentTime3', 'duration3', 'volumeControl3', 'loopBtn3', 'error3');
+    </script>
+</body>
+</html>
