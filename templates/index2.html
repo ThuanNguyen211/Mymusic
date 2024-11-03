@@ -94,26 +94,15 @@
             <div class="audio-container">
                 <!-- Điều khiển chung cho Nhóm 1 -->
                 <div class="group-controls">
-                    <button id="loopBtnGroup1">Loop Off</button>
                     <input type="range" id="volumeControlGroup1" class="volume-control" value="1" step="0.1" min="0" max="1">
+                    <button id="loopBtnGroup1">Loop Off</button>
                 </div>
 
                 <!-- Trình phát nhạc cá nhân trong Nhóm 1 -->
                 <div class="audio-player">
                     <h3>Coffee Time Lofi</h3>
                     <audio id="audio1" loop>
-                        <source src="static\music\Coffee Time Lofi.mp3" type="audio/mpeg">
-                    </audio>
-                    <div class="custom-controls">
-                        <button id="playPauseBtn1">Play</button>
-                        <input type="range" id="seekBar1" class="seek-bar" value="0" step="0.1" min="0" max="100">
-                        <span id="currentTime1">00:00</span> / <span id="duration1">00:00</span>
-                    </div>
-                    <div id="error1" class="error-message"></div>
-
-                    <h3>Piano</h3>
-                    <audio id="audio1" loop>
-                        <source src="static\music\Piece of piano.mp3" type="audio/mpeg">
+                        <source src="static/music/song1.mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
                         <button id="playPauseBtn1">Play</button>
@@ -130,14 +119,13 @@
             <div class="audio-container">
                 <!-- Điều khiển chung cho Nhóm 2 -->
                 <div class="group-controls">
-                    <button id="loopBtnGroup2">Loop Off</button>
                     <input type="range" id="volumeControlGroup2" class="volume-control" value="1" step="0.1" min="0" max="1">
                 </div>
 
                 <div class="audio-player">
                     <h3>Vỗ tay</h3>
                     <audio id="audio2">
-                        <source src="static\music\Applause cheer.mp3" type="audio/mpeg">
+                        <source src="static/music/song2.mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
                         <button id="playPauseBtn2">Play</button>
@@ -154,14 +142,13 @@
             <div class="audio-container">
                 <!-- Điều khiển chung cho Nhóm 3 -->
                 <div class="group-controls">
-                    <button id="loopBtnGroup3">Loop Off</button>
                     <input type="range" id="volumeControlGroup3" class="volume-control" value="1" step="0.1" min="0" max="1">
                 </div>
 
                 <div class="audio-player">
-                    <h3>Among Us (Role Reveal)</h3>
+                    <h3>Victory Sound</h3>
                     <audio id="audio3">
-                        <source src="static\music\Among Us (Role Reveal).mp3" type="audio/mpeg">
+                        <source src="static/music/song3.mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
                         <button id="playPauseBtn3">Play</button>
@@ -252,9 +239,9 @@
         }
 
         // Khởi tạo điều khiển cho từng nhóm
-        setupGroupControls([document.getElementById('audio1')], 'loopBtnGroup1', 'volumeControlGroup1');
-        setupGroupControls([document.getElementById('audio2')], 'loopBtnGroup2', 'volumeControlGroup2');
-        setupGroupControls([document.getElementById('audio3')], 'loopBtnGroup3', 'volumeControlGroup3');
+        setupGroupControls([document.getElementById('audio1')], 'volumeControlGroup1', 'loopBtnGroup1');
+        setupGroupControls([document.getElementById('audio2')], 'volumeControlGroup2');
+        setupGroupControls([document.getElementById('audio3')], 'volumeControlGroup3');
 
         // Khởi tạo điều khiển cho từng audio
         setupCustomAudioControls('audio1', 'playPauseBtn1', 'seekBar1', 'currentTime1', 'duration1', 'error1');
