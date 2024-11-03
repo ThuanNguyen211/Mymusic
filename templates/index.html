@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Player</title>
     <link rel="icon" href="static/images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body {
+            background-color: #91c8ff; /* Mã màu nền bạn muốn */
+        }
         /* CSS cho giao diện chung */
         .container {
             max-width: 800px;
@@ -71,16 +75,22 @@
         .volume-control {
             width: 100px;
         }
+        .volume-control {
+            width: 200px; /* Tăng chiều rộng của thanh âm lượng */
+        }
         .error-message {
             color: red;
             display: none;
             margin-top: 5px;
         }
+        h1 {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Audio Player</h2>
+        <h1>Audio Player</h1>
 
         <!-- Tabs cho các nhóm -->
         <div class="tabs">
@@ -94,33 +104,36 @@
             <div class="audio-container">
                 <!-- Điều khiển chung cho Nhóm 1 -->
                 <div class="group-controls">
-                    <button id="loopBtnGroup1">Loop Off</button>
+                    <button id="loopBtnGroup1"><i class="fas fa-sync-alt"></i> Loop Off</button>
                     <input type="range" id="volumeControlGroup1" class="volume-control" value="1" step="0.1" min="0" max="1">
+                    <span id="volumeValueGroup1">100%</span> <!-- Hiển thị giá trị âm lượng -->
                 </div>
 
                 <!-- Trình phát nhạc cá nhân trong Nhóm 1 -->
                 <div class="audio-player">
                     <h3>Coffee Time Lofi</h3>
-                    <audio id="audio1" loop>
+                    <audio id="audio1">
                         <source src="static\music\Coffee Time Lofi.mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
-                        <button id="playPauseBtn1">Play</button>
+                        <button id="playPauseBtn1"><i class="fas fa-play"></i></button>
                         <input type="range" id="seekBar1" class="seek-bar" value="0" step="0.1" min="0" max="100">
                         <span id="currentTime1">00:00</span> / <span id="duration1">00:00</span>
                     </div>
                     <div id="error1" class="error-message"></div>
+                </div>
 
+                <div class="audio-player">
                     <h3>Piano</h3>
-                    <audio id="audio1" loop>
+                    <audio id="audio1.1">
                         <source src="static\music\Piece of piano.mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
-                        <button id="playPauseBtn1">Play</button>
-                        <input type="range" id="seekBar1" class="seek-bar" value="0" step="0.1" min="0" max="100">
-                        <span id="currentTime1">00:00</span> / <span id="duration1">00:00</span>
+                        <button id="playPauseBtn1.1"><i class="fas fa-play"></i></button>
+                        <input type="range" id="seekBar1.1" class="seek-bar" value="0" step="0.1" min="0" max="100">
+                        <span id="currentTime1.1">00:00</span> / <span id="duration1.1">00:00</span>
                     </div>
-                    <div id="error1" class="error-message"></div>
+                    <div id="error1.1" class="error-message"></div>
                 </div>
             </div>
         </div>
@@ -130,8 +143,9 @@
             <div class="audio-container">
                 <!-- Điều khiển chung cho Nhóm 2 -->
                 <div class="group-controls">
-                    <button id="loopBtnGroup2">Loop Off</button>
+                    <button id="loopBtnGroup2"><i class="fas fa-sync-alt"></i> Loop Off</button>
                     <input type="range" id="volumeControlGroup2" class="volume-control" value="1" step="0.1" min="0" max="1">
+                    <span id="volumeValueGroup2">100%</span> <!-- Hiển thị giá trị âm lượng -->
                 </div>
 
                 <div class="audio-player">
@@ -140,7 +154,7 @@
                         <source src="static\music\Applause cheer.mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
-                        <button id="playPauseBtn2">Play</button>
+                        <button id="playPauseBtn2"><i class="fas fa-play"></i></button>
                         <input type="range" id="seekBar2" class="seek-bar" value="0" step="0.1" min="0" max="100">
                         <span id="currentTime2">00:00</span> / <span id="duration2">00:00</span>
                     </div>
@@ -154,8 +168,9 @@
             <div class="audio-container">
                 <!-- Điều khiển chung cho Nhóm 3 -->
                 <div class="group-controls">
-                    <button id="loopBtnGroup3">Loop Off</button>
+                    <button id="loopBtnGroup3"><i class="fas fa-sync-alt"></i> Loop Off</button>
                     <input type="range" id="volumeControlGroup3" class="volume-control" value="1" step="0.1" min="0" max="1">
+                    <span id="volumeValueGroup3">100%</span> <!-- Hiển thị giá trị âm lượng -->
                 </div>
 
                 <div class="audio-player">
@@ -164,7 +179,7 @@
                         <source src="static\music\Among Us (Role Reveal).mp3" type="audio/mpeg">
                     </audio>
                     <div class="custom-controls">
-                        <button id="playPauseBtn3">Play</button>
+                        <button id="playPauseBtn3"><i class="fas fa-play"></i></button>
                         <input type="range" id="seekBar3" class="seek-bar" value="0" step="0.1" min="0" max="100">
                         <span id="currentTime3">00:00</span> / <span id="duration3">00:00</span>
                     </div>
@@ -190,38 +205,35 @@
         }
 
         // Thiết lập điều khiển chung cho từng nhóm
-        function setupGroupControls(groupAudios, loopBtnId, volumeControlId) {
-            const loopBtn = document.getElementById(loopBtnId);
-            const volumeControl = document.getElementById(volumeControlId);
-
-            // Điều khiển loop cho cả nhóm
-            loopBtn.addEventListener('click', () => {
-                groupAudios.forEach(audio => audio.loop = !audio.loop);
-                loopBtn.textContent = groupAudios[0].loop ? 'Loop On' : 'Loop Off';
-            });
-
-            // Điều khiển thanh âm lượng cho cả nhóm
-            volumeControl.addEventListener('input', () => {
-                groupAudios.forEach(audio => audio.volume = volumeControl.value);
-            });
-        }
+        // function setupGroupControls(groupAudios, loopBtnId, volumeControlId) {
+        //     const volumeControl = document.getElementById(volumeControlId);
+        //     const loopBtn = document.getElementById(loopBtnId);
+        
+        //     loopBtn.addEventListener('click', () => {
+        //         groupAudios.forEach(audio => audio.loop = !audio.loop);
+        //         loopBtn.innerHTML = groupAudios[0].loop 
+        //             ? '<i class="fas fa-sync-alt"></i> Loop On' 
+        //             : '<i class="fas fa-sync-alt"></i> Loop Off';
+        //     });
+        // }
 
         // Thiết lập trình phát nhạc tùy chỉnh cho từng audio
         function setupCustomAudioControls(audioId, playPauseBtnId, seekBarId, currentTimeId, durationId, errorId) {
             const audio = document.getElementById(audioId);
-            const playPauseBtn = document.getElementById(playPauseBtnId);
             const seekBar = document.getElementById(seekBarId);
             const currentTimeDisplay = document.getElementById(currentTimeId);
             const durationDisplay = document.getElementById(durationId);
             const errorDiv = document.getElementById(errorId);
 
+            const playPauseBtn = document.getElementById(playPauseBtnId);
+        
             playPauseBtn.addEventListener('click', () => {
                 if (audio.paused) {
                     audio.play();
-                    playPauseBtn.textContent = 'Pause';
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; // Đổi icon thành dừng
                 } else {
                     audio.pause();
-                    playPauseBtn.textContent = 'Play';
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; // Đổi icon thành phát
                 }
             });
 
@@ -251,13 +263,39 @@
             }
         }
 
+        function setupGroupControls(groupAudios, loopBtnId, volumeControlId, volumeValueId) {
+            const loopBtn = document.getElementById(loopBtnId);
+            const volumeControl = document.getElementById(volumeControlId);
+            const volumeValueDisplay = document.getElementById(volumeValueId);
+
+            loopBtn.addEventListener('click', () => {
+                const isLooping = groupAudios[0].loop;
+                groupAudios.forEach(audio => audio.loop = !isLooping); // Đảo trạng thái lặp
+                loopBtn.innerHTML = !isLooping 
+                    ? '<i class="fas fa-sync-alt"></i> Loop On' 
+                    : '<i class="fas fa-sync-alt"></i> Loop Off';
+            });
+
+            volumeControl.addEventListener('input', () => {
+                const volumePercentage = Math.round(volumeControl.value * 100);
+                volumeValueDisplay.textContent = `${volumePercentage}%`; // Cập nhật giá trị
+                groupAudios.forEach(audio => audio.volume = volumeControl.value);
+            });
+        }
+
+        // Gọi hàm setup với các ID của nhóm 1
+        setupGroupControls([document.getElementById('audio1')], 'loopBtnGroup1', 'volumeControlGroup1', 'volumeValueGroup1');
+        setupGroupControls([document.getElementById('audio2')], 'loopBtnGroup2', 'volumeControlGroup2', 'volumeValueGroup2');
+        setupGroupControls([document.getElementById('audio3')], 'loopBtnGroup3', 'volumeControlGroup3', 'volumeValueGroup3');
+
         // Khởi tạo điều khiển cho từng nhóm
-        setupGroupControls([document.getElementById('audio1')], 'loopBtnGroup1', 'volumeControlGroup1');
-        setupGroupControls([document.getElementById('audio2')], 'loopBtnGroup2', 'volumeControlGroup2');
-        setupGroupControls([document.getElementById('audio3')], 'loopBtnGroup3', 'volumeControlGroup3');
+        // setupGroupControls([document.getElementById('audio1')], 'loopBtnGroup1', 'volumeControlGroup1');
+        // setupGroupControls([document.getElementById('audio2')], 'loopBtnGroup2', 'volumeControlGroup2');
+        // setupGroupControls([document.getElementById('audio3')], 'loopBtnGroup3', 'volumeControlGroup3');
 
         // Khởi tạo điều khiển cho từng audio
         setupCustomAudioControls('audio1', 'playPauseBtn1', 'seekBar1', 'currentTime1', 'duration1', 'error1');
+        setupCustomAudioControls('audio1.1', 'playPauseBtn1.1', 'seekBar1.1', 'currentTime1.1', 'duration1.1', 'error1.1');
         setupCustomAudioControls('audio2', 'playPauseBtn2', 'seekBar2', 'currentTime2', 'duration2', 'error2');
         setupCustomAudioControls('audio3', 'playPauseBtn3', 'seekBar3', 'currentTime3', 'duration3', 'error3');
     </script>
